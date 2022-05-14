@@ -10,11 +10,13 @@ class MessageRepository implements MessageRepositoryInterface
 	/**
 	 * get all messages
 	 * 
+	 * @param int $limit
+	 * @param int $offset
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
-	public function getAll()
+	public function getAll($limit, $offset)
 	{
-		return Message::all();
+		return Message::limitOffset($limit, $offset)->get();
 	}
 
 	/**

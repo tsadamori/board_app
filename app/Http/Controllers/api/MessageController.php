@@ -24,17 +24,21 @@ class MessageController extends Controller
     /**
      * Messages index
      * 
+     * @param Illuminate\Http\Request $request
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->messageRepository->getAll();
+        $limit = $request->limit ?? null;
+        $offset = $request->offset ?? null;
+        return $this->messageRepository->getAll($limit, $offset);
     }
 
     /**
      * Store message
      * 
-     * @return  Illuminate\Database\Eloquent\Model
+     * @param Illuminate\Http\Request $request
+     * @return Illuminate\Database\Eloquent\Model
      */
     public function store(Request $request)
     {
@@ -45,6 +49,7 @@ class MessageController extends Controller
     /**
      * Delete message
      * 
+     * @param int $id
      * @return boolean
      */
     public function destroy($id)
