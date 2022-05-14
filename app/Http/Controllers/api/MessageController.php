@@ -3,30 +3,52 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\MessageRepository;
 use Illuminate\Http\Request;
-use App\Models\Message;
 
 class MessageController extends Controller
 {
+    private MessageRepository $messageRepository;
+
+    /**
+     * Constructor
+     * 
+     * @param object $messageRepository
+     * @return void
+     */
+    public function __construct(MessageRepository $messageRepository)
+    {
+        $this->messageRepository = $messageRepository;
+    }
+
+    /**
+     * Messages index
+     * 
+     * @return Illuminate\Database\Eloquent\Collection
+     */
     public function index()
     {
-        $messages = Message::all();
-        return response()->json($messages, 200);
+        return $this->messageRepository->getAll();
     }
 
+    /**
+     * Store message
+     * 
+     * @return  Illuminate\Database\Eloquent\Model
+     */
     public function store(Request $request)
     {
-        $message = new Message;
-        $message->name = $request->name;
-        $message->message = $request->message;
-        $message->save();
-        return redirect('/');
+        $input = $request->only(['name', 'message']);
+        return $this->messageRepository->create($input);
     }
 
+    /**
+     * Delete message
+     * 
+     * @return boolean
+     */
     public function destroy($id)
     {
-        $message = Message::findOrFail($id);
-        $message->delete();
-        return redirect('/');
+        return $this->messageRepository->delete($id);
     }
 }
